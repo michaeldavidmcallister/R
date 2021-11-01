@@ -1,0 +1,198 @@
+---
+title: 'CIND 123 - Data Analytics: Basic Methods'
+author: 
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+<center> <h1> Assignment 2 (10%) </h1> </center>
+<center>  <h3> Michael McAllister </h2> </center>
+<center> <h3> CIND123 - 501133880 </h2> </center>
+---
+## Instructions 
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. Review this website for more details on using R Markdown <http://rmarkdown.rstudio.com>.
+
+Use RStudio for this assignment. Complete the assignment by inserting your R code wherever you see the string "#INSERT YOUR ANSWER HERE".
+
+When you click the **Knit** button, a document (PDF, Word, or HTML format) will be generated that includes both the assignment content as well as the output of any embedded R code chunks.
+
+Submit **both**  the rmd and generated output files. Failing to submit both files will be subject to mark deduction.
+
+## Sample Question and Solution
+
+Use `seq()` to create the vector $(1,2,3,\ldots,20)$.
+
+```{r}
+seq(1,20)
+```
+
+******
+\newpage
+## Question 1 
+
+The Titanic Passenger Survival Data Set provides information on the fate of passengers on the fatal maiden voyage of the ocean liner "Titanic." The dataset is available from the Department of Biostatistics at the Vanderbilt University School of Medicine (https://biostat.app.vumc.org/wiki/pub/Main/DataSets/titanic3.csv)in several formats. store the Titanic Data Set `titanic_train` using the following commands. 
+```{r}
+url <- "https://biostat.app.vumc.org/wiki/pub/Main/DataSets/titanic3.csv"
+titanic_train <- read.csv(file = url, stringsAsFactors = FALSE,
+sep = ",", header = TRUE, na.strings = c("","NA"))
+names(titanic_train) <- c('Pclass', 'survived', 'name', 'sex', 'age',
+'sib_sp', 'parch', 'ticket', 'fare', 'cabin', 'embarked', 'boat', 'body', 'home_destination')
+```
+
+a) Extract the columns `sex`, `age`, `cabin` and `survived` into a new data frame of the name 'titanicSubset'.
+
+```{r}
+titanicSubset <- subset(titanic_train, select = c(sex, age, cabin, survived))
+```
+
+
+b) Use the aggregate() function to display the total number of survivors grouped by `sex`
+
+```{r}
+aggregate(titanicSubset$survived, by = list(titanicSubset$sex), FUN=sum)
+#I used the sum function here for survived since the survived attribute looks like a dummy variable: 1= survived and 0 = did not survive.
+```
+
+c) Use the count() function in `dplyr` package to display the total number of passengers within each Ticket Class `Pclass.`
+
+```{r}
+#install.packages("dplyr")
+library("dplyr")
+
+titanic_train %>% count(Pclass, name = "Total Number of Passengers")
+```
+
+d) Answer the following graphically (using visualization):
+1. What was the survival rates for females and males?
+2. What was the age distribution on the Titanic?
+
+Hint: You can use ggplot2
+```{r}
+library(ggplot2)
+
+p <- titanic_train %>%
+  ggplot(aes(x = factor(sex), y = survived)) + 
+  geom_bar(stat = "summary", fun = "mean", fill =I('blue'))
+
+p + labs(y="Survival Rate", x = "Sex") + expand_limits(y=c(0,1))
+
+p <- titanic_train %>%
+  ggplot(aes(x = age)) +
+  geom_histogram(binwidth = 5)
+p + labs(y="Total Count", x = "Age distribution on the titanic")
+```
+
+e)Use the `for` loop and `if` control statements to list the women's names, age 34 or more that emabrked from S (Southampton), on the Titanic.
+```{r}
+
+a <- subset(titanic_train, select = c(name, age, sex, embarked))
+cleaned_subset<- a[complete.cases(a), ]
+name_women <- c()
+
+for (row in (1:nrow(cleaned_subset))) {
+  if ((cleaned_subset[row, 2] >= 34) &
+      (cleaned_subset[row, 3] == 'female') &
+      (cleaned_subset[row, 4] == 'S')) {
+    name_women<-c(name_women,cleaned_subset[row, 1])
+  }
+}
+name_women
+
+```
+
+******
+\newpage
+## Question 2
+
+A study was conducted on GRE test takers to evaluate the success conditions. The success rate is 25%. A sample of 30 test takers is selected for the study. Use the binomial distribution to calculate the followings:
+
+a) The probability that 10 test takers fail the GRE test:
+```{r}
+dbinom(10, 30, .75)
+```
+
+b) The probability of getting at least five test takers succeed in the test
+```{r}
+1 - pbinom(4,30,.25)
+```
+
+c) The probability of 25 or less fail the test
+```{r}
+pbinom(25,30,.75)
+```
+
+
+******
+\newpage
+## Question 3 
+
+In a shipment of 20 engines, history shows that the probability of any one engine proving unsatisfactory is 0.1
+
+a) Use the Binomial approximation to calculate the probability that more than 10 engines are defective? 
+```{r}
+1 - pbinom(10,20,.1)
+```
+b) Use the Poisson approximation to calculate the probability that at most three engines are defective? 
+```{r}
+ppois(3,2)
+```
+
+c) Use the binomial approximation to calculate the probability that at most three engines are defective? 
+```{r}
+pbinom(3,20,.1)
+```
+
+
+d) Compare the results of parts b and c, then illustrate on how well the Poisson probability distribution approximates the Binomial probability distribution.
+```{r}
+#The results of the poisson distribution and the binomial distribution appear to be very similar.  Here is a graph illustrating the two distributions showing how smiliar they are to each other:
+
+x <- c(0:7)
+n <- 20
+p <- .1
+expected_value <- n * p
+
+yb <- pbinom(x, n, p, lower.tail = FALSE)
+yp <- ppois(x, expected_value, lower.tail = FALSE)
+
+plot(yb, main = 'Binomial Distribution', ylab = 'Probability', xlab = 'defective engines')
+plot(yp, main = 'Poisson Distribution', ylab = 'Probability', xlab = 'defective engines')
+
+```
+
+
+
+******
+\newpage
+## Question 4 
+
+Write a script in R to compute the following probabilities of a normal random variable with mean 16 and variance 9
+
+a) lies between 14.4 and 20.3 (inclusive)
+```{r}
+pnorm(20.3, mean=16, sd=3) - pnorm(14.4, mean=16, sd=3)
+```
+
+
+b) is greater than 21.8
+```{r}
+1 - pnorm(21.8, mean=16, sd=3)
+```
+
+
+c) is less or equal to 10.5
+```{r}
+pnorm(10.5, mean=16, sd=3)
+```
+
+
+d) is less than 13 or greater than 19
+```{r}
+pnorm(13, mean=16, sd=3) + (1-pnorm(19, mean=16, sd=3))
+```
+
+******
+
+END of Assignment #2.
