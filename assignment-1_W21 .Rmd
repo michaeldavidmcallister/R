@@ -1,0 +1,248 @@
+---
+title: 'CIND 123 - Data Analytics: Basic Methods'
+author: 
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+<center> <h1> Assignment 1 (10%) </h1> </center>
+<center>  <h3> Michael McAllister </h2> </center>
+<center> <h3> CIND123 - 501133880 </h2> </center>
+---
+## Instructions 
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. Review this website for more details on using R Markdown <http://rmarkdown.rstudio.com>.
+
+Use RStudio for this assignment. Complete the assignment by inserting your R code wherever you see the string "#INSERT YOUR ANSWER HERE".
+
+When you click the **Knit** button, a document (PDF, Word, or HTML format) will be generated that includes both the assignment content as well as the output of any embedded R code chunks.
+
+Submit **both**  the rmd and generated output files. Failing to submit both files will be subject to mark deduction.
+
+## Sample Question and Solution
+
+Use `seq()` to create the vector $(1,2,3,\ldots,10)$.
+
+```{r}
+seq(1,10)
+```
+
+## Question 1
+
+a) Create and print a vector `x` with all integers 1-100, and a vector `y` with every fifth integer in the same range. Hint: use `seq()`function. What is the difference in lengths of the vectors `x` and `y`?.
+
+```{r}
+#Integers from 1-100
+x <- c(1:100)
+print("Sequence from 1-100")
+print(x)
+#Every 5th integer from 1-100 starting with the 5th
+y <- seq(5, 100, 5)
+print("Sequence from 5-100 by 5")
+print(y)
+#Difference in length between x and y
+Difflength <- length(x) - length(y)
+print("The difference in length is ")
+print(Difflength)
+#The difference in length is 80
+```
+
+b) Create a new vector, "x_square", with the square of elements at indices 3, 6, 7, 10, 15, 22, 23, 24, and 30 from the variable "x". Hint: Use indexing rather than a for loop. Calculate the mean and median of the last five values from x_square.
+
+```{r}
+#New value x_square showing squared values
+x_square <- x[c(3,6,7,10,15,22,23,24,30)]^2
+#mean of last 5 x_square values
+mean(x_square[5:9])
+#median of last 5 x_square values
+median(x_square[5:9])
+```
+
+c) To convert factor to number, would it be correct to use the following commands? Explain your answer.
+
+`factorVar <- factor(c(1, 6, 5.4, 3.2));as.numeric(factorVar)`
+
+```{r}
+# From Help in the warning section for factor we find, "In particular, as.numeric applied to a factor is meaningless, and may happen by implicit coercion. To transform a factor f to approximately its original numeric values, as.numeric(levels(f))[f] is recommended and slightly more efficient than as.numeric(as.character(f)).
+#  So it would not be correct.  The suggested method is as.numeric(levels(f))[f] which would return the assumed value the author is looking for
+
+```
+
+d) A comma-separated values file `dataset.csv` consists of missing values represented by question marks (`?`) and exclamation mark (`!`). How can you read this type of files in R?
+
+```{r}
+
+#  There will be difficulties with the dataset.  There are multiple ways to 
+#  obtain correct data from the dataset.  One possibility is to use the 
+# na.strings function while importing the dataset and assign the unsupported 
+# missing values to a vector like the following:
+#  
+#  na.strings = c("NA", "?", "!")
+#  
+#
+#  R will then assign the missing data types to NA.
+```
+
+\newpage
+## Question 2
+
+a) Compute: $$\sum_{n=1}^{100}\frac{2^{n}}{(n-1)!}$$
+
+```{r}
+#n=1-100
+#2n/(n-1)!
+#denoting n as n_a to keep the values separate for each question
+n_a <- c(1:100)
+formula <- 2^n_a / factorial(n_a - 1)
+sum(formula)
+```
+
+b) Compute: $$\sum_{n=1}^{10}\left(\frac{2^{n}}{n^2} + \frac{n^{4}}{4^{n}}\right)$$
+
+```{r}
+n_b <- c(1:10)
+#defining n as n_b to allow the values to stay over multiple questions
+formula2 <- (2^n_b / n_b^2) + (n_b^4 / 4^n_b)
+sum(formula2)
+```
+
+c) Compute: $$\sum_{n=0}^{10} \frac{1}{(n+1)!}$$ 
+
+```{r}
+n_c <- c(0:10)
+formula3 <- 1 / factorial(n_c+1)
+sum(formula3)
+```
+
+d) Compute: $$\prod_{n=3}^{33} \left(3n + \frac{3}{\sqrt[3]{n}}\right)$$
+
+```{r}
+n_d <- c(3:33)
+#defining n as n_d to allow the values to stay over multiple questions
+formula4 <- (3*n_d) + (3/(n_d^(1/3)))
+prod(formula4)
+```
+
+e) Explain the output of this R-command:
+`c(0:5)[NA]`
+
+```{r}
+#The output will be 'NA NA NA NA NA NA'
+#The first part will create a sequence from 0-5 as expected of 6 values.  The second part will return NA in the sequence 
+```
+
+f) What is the difference between is.vector() and is.numeric() functions?
+
+```{r}
+#  A vector is a 1 dimensional array of values, is.vector() will return TRUE if the mode is a vector, if not FALSE. is.numeric returns TRUE if the mode is of the numeric values (floats or integers), and will return FALSE if the values are strings
+```
+
+g) List at least three advantages and three disadvantages of using `RShiny` package?
+```{r}
+#3 Advantages as per the web:
+#1.  Diversity. You can communicate results via interactive charts,
+#    visualizations, text, or tables.
+#2.  Ease-of-use. If you already know R, you can rapidly develop a cool Shiny #    app. ...
+#3.  Share-ability. Built-in capabilities let you share your work easily with #    colleagues and friends.
+#
+#3 Disadvantages as per the web:
+#1.  A steep learning curve with web design and using HTML and CSS
+#2.  Shiny dashboard is stored on the cloud as a web app, the user must have 
+#    Internet access to access it
+#3.  RShiney has a cost and is not free
+
+```
+
+\newpage
+## Question 3
+`iris` dataset gives the measurements in centimeters of the variables sepal length, sepal width, petal length and petal width, respectively, for 50 flowers from each of 3 species of iris. The species are Iris setosa, versicolor, and virginica.
+
+Install the `iris` dataset on your computer using the command `install.packages("datasets")`. Then, load the `datasets` package into your session using the following command.
+```{r}
+library(datasets)
+data(iris)
+summary(iris)
+```
+
+a) Display the first six rows of the `iris` data set.
+
+```{r}
+head(iris, 6)
+```
+
+b) Compute the average of the first four variables (Sepal.Length, Sepal.Width, Petal.Length and Petal.Width) using `sapply()` function.
+
+Hint: You might need to consider removing the `NA` values, otherwise the average will not be computed.
+
+```{r}
+sapply(iris[1:4], mean)
+```
+
+c) Show how to use R to replace the missing values in this dataset with plausible ones.
+
+```{r}
+# There are no missing values in this dataset
+# If there were missing values there are multiple ways to replace the values with plausible ones.  If there were missing values I would add na.rm=TRUE to exclude the missing variables from functions/calulations in order to have the least impact possible.  Another option would be to inpute the missing values with the existing mean, median or mode, but this can have an impact on the standard deviation.  The following shows examples to be added to functions depending on their type:
+#  The following is an example of ignoring NAs:
+#  average <- function(x) % Create average
+#{
+#return(sum(x, na.rm = T)/length(na.omit(x)))
+#}
+#average(c(2, 3, 4, NA))
+
+# Create a new variable with the mean and median and replace the missing variables
+# df_titanic_replace <- df_titanic %>%
+#   mutate(replace_mean_age  = ifelse(is.na(age), average_missing[1], age),
+#   replace_mean_fare = ifelse(is.na(fare), average_missing[2], fare))
+
+```
+
+d) Compute the standard deviation for only the first and the third variables (Sepal.Length and Petal.Length)
+
+```{r}
+sd_sepal.length <- sd(iris[,1])
+print(sd_sepal.length)
+sd_petal.length <- sd(iris[,3])
+print(sd_petal.length)
+```
+
+e) Construct a boxplot for `Sepal.Width` variable, then display the values of all the outliers. Explain how these outliers have been calculated.
+
+```{r}
+#Define the Sepal.Width data
+Sepal.Width <- c(iris[,2])
+#Created a new variable called outliers containing all outliers
+outliers <- boxplot.stats(Sepal.Width)$out
+#Created a boxplot listing outliers at the bottom
+boxplot(Sepal.Width, ylab = "Length", main = "Boxplot of Sepal Widths")
+mtext("Outliers", side=1, line =2)
+mtext("2, 4.1, 4.2, 4.4", side=1, line=3)
+#Ouliters are identified by being a data point that is more than 1.5 IQR above the third quartile or below the first quartile. In this case, they were identified with the boxplot function
+```
+
+f) Compute the upper quartile of the `Sepal.Width` variable with two different methods.
+
+```{r}
+quantile(Sepal.Width, .75)
+fivenum(Sepal.Width)[4]
+#two ways of displaying the upper 75% quartile.  First using the quartile function, the second displaying the 4th value from the fivenum function
+```
+
+g) Construct a pie chart to describe the species with 'Sepal.Length' less than 7 centimeters.
+```{r}
+#installed plyr
+#install.packages("plyr")
+library("plyr")
+#created a subset of iris excluding rows where sepal length was >=7
+piedat <- subset(iris, Sepal.Length <7)
+count(piedat[,5])
+#To obtain frequency of each species of flower
+freqpie <- c(50, 49, 38)
+lbls <- c("setosa", "versicolor", "virginica")
+pct <- paste((round(freqpie/(sum(freqpie))*100)), "%")
+lbls <- paste(lbls, pct)
+pie(freqpie, labels = lbls, main="Pie Chart of Sepal Length Less Than 7 in Percentages")
+```
+
+END of Assignment #1.
